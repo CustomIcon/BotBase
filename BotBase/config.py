@@ -80,7 +80,7 @@ DB_UNBAN_USER = "UPDATE users SET banned = 0 WHERE users.tg_id = ?"
 ADMINS = {123456: "admin name"}   # Edit this dict with the ID:NAME of the admin that you want to add. You can add as many admins as you want
 BYPASS_FLOOD = False  # If True, admins can be flood-blocked too, otherwise the antiflood will ignore them
 # If you want the user to be notified of being flood-blocked, set this to the desired message
-USER_INFO = "**ℹ️ User info**\n\n🆔 **User ID**: `{uid}`\n✍️ **Username**: {uname}\n🗓 Registered at: {date}\n**⌨️ Account Status**: {status}"  # The message that is sent with /getuser and /getranduser
+USER_INFO = "**ℹ️ User info**\n\n🆔 **User ID**: `{uid}`\n✍️ **Username**: {uname}\n🗓 Registered at: {date}\n**⌨️ Account Status**: {status}\n**💡 Admin**: {admin}"  # The message that is sent with /getuser and /getranduser
 INVALID_SYNTAX = "❌ **Invalid syntax**"  # This is sent when a command is used the wrong way
 ERROR = "❌ **Error**"   # This is sent when a command returns an error
 NONNUMERIC_ID = "The ID must be numeric!"   # This is sent if the parameter to /getuser is not a numerical ID
