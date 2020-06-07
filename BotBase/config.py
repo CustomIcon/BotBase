@@ -87,8 +87,10 @@ DB_UPDATE_NAME = "UPDATE users SET uname = ? WHERE users.tg_id = ?"
 # Admin module configuration
 
 
-# Edit this dict with the ID:NAME of the admin that you want to add. You can add as many admins as you want
+# Edit this dict adding the ID:NAME pair of the admin that you want to add. You can add as many admins as you want
 ADMINS = {1234567: "name here"}
+MARKED_BUSY = "🎲 Marked as busy. You won't receive any support notification until you send /busy again"
+UNMARKED_BUSY = "✍ You are now receiving support notifications"
 CANNOT_BAN_ADMIN = "❌ Operation not allowed, you can't ban/unban an admin!"
 USER_BANNED = "✅ User has been banned"
 USER_UNBANNED = "✅ User has been unbanned"
@@ -100,7 +102,7 @@ WHISPER_FROM = "📣 Incoming message from {admin}: {msg}"
 NAME = "tg://user?id={}"
 BYPASS_FLOOD = False  # If False, admins can be flood-blocked too, otherwise the antiflood will ignore them
 USER_INFO_UPDATED = "✅ User info was correctly updated"
-USER_INFO_UNCHANGED = "❌ The user's info hasn't changed!"
+USER_INFO_UNCHANGED = "❌ The user's info hasn't changed"
 USER_INFO = """**ℹ️ User info**
 
 🆔 **User ID**: `{uid}`
