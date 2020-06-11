@@ -10,17 +10,18 @@ import os
 
 
 BAN_TIME = 300  # The amount of seconds the user will be banned
-MAX_UPDATE_THRESHOLD = 5   # How many updates to accumulate before starting to count
+MAX_UPDATE_THRESHOLD = 4   # How many updates to accumulate before starting to count
 COUNT_CALLBACKS_SEPARATELY = False   # If True, callback queries and messages will have their own separate flood counter
 PRIVATE_ONLY = True    # If True, the antiflood will only work in private chats
-# The percentage (from 0.0 to 100.0) of updates that when below ANTIFLOOD_SENSIBILITY will trigger the anti flood
+# The percentage (from 0 to 100) of updates that when below ANTIFLOOD_SENSIBILITY will trigger the anti flood
 # Example, if FLOOD_PERCENTAGE == 75, if at least 75% of the messages from a user are marked as flood it will be blocked
-FLOOD_PERCENTAGE = 75.0
+FLOOD_PERCENTAGE = 75
 # The minimum amount of seconds between updates. Updates that are sent faster than this limit will trigger the antiflood
 # This should not be below 1, but you can experiment if you feel bold enough
 ANTIFLOOD_SENSIBILITY = 1
 # If you want the user to be notified of being flood-blocked, set this to the desired message, False to disable
 FLOOD_NOTICE = f"🤙 **Hey dude**!\n🕐 Chill! You have been blocked for {BAN_TIME / 60:.1f} minutes"
+DELETE_MESSAGES = True   # Set this to false if you do not want the messages to be deleted after flood is detected
 
 # Various options and global variables
 
@@ -38,8 +39,8 @@ WORKERS_NUM = 15   # The number of worker threads that pyrogram will spawn at st
 BOT_TOKEN = "TOKEN"     # Get it with t.me/BotFather
 SESSION_NAME = "BotName"   # The name of the Telegram Session that the bot will have, will be visible from Telegram
 PLUGINS_ROOT = {"root": f"{MODULE_NAME}/modules"}   # Do not change this unless you know what you're doing
-API_ID = 123456   # Get it at https://my.telegram.org/apps
-API_HASH = "123456abcdef"      # Same as above
+API_ID = 123456 # Get it at https://my.telegram.org/apps
+API_HASH = "abcdefggi12345"  # Same as above
 
 
 # Logging configuration
