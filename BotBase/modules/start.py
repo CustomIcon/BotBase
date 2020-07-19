@@ -16,10 +16,7 @@ def check_user_banned(tg_id: int):
     else:
         if not res:
             return False
-        if res[-1]:
-            return True
-        else:
-            return False
+        return bool(res[-1])
 
 
 @Client.on_message(Filters.command("start") & ~BANNED_USERS & Filters.private)

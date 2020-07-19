@@ -27,10 +27,7 @@ def begin_chat(client, query):
     queue = LIVE_CHAT_STATUSES
     for admin_id, admin_name in ADMINS.items():
         status = CACHE[admin_id][0]
-        if status != "IN_CHAT":
-            queue += f"- {STATUS_FREE}"
-        else:
-            queue += f"- {STATUS_BUSY}"
+        queue += f"- {STATUS_FREE}" if status != "IN_CHAT" else f"- {STATUS_BUSY}"
         queue += f"[{admin_name}]({NAME.format(admin_id)})\n"
     msg = edit_message_text(query, True, SUPPORT_REQUEST_SENT.format(queue=queue, date=time.strftime('%d/%m/%Y %T')),
                             reply_markup=BUTTONS)
@@ -58,10 +55,7 @@ def update_admins_list(_, query):
             queue = LIVE_CHAT_STATUSES
             for admin_id, admin_name in ADMINS.items():
                 status = CACHE[admin_id][0]
-                if status != "IN_CHAT":
-                    queue += f"- {STATUS_FREE}"
-                else:
-                    queue += f"- {STATUS_BUSY}"
+                queue += f"- {STATUS_FREE}" if status != "IN_CHAT" else f"- {STATUS_BUSY}"
                 queue += f"[{admin_name}]({NAME.format(admin_id)})\n"
             edit_message_text(query, True, SUPPORT_REQUEST_SENT.format(queue=queue, date=time.strftime('%d/%m/%Y %T')),
                               reply_markup=BUTTONS)
@@ -73,48 +67,49 @@ def update_admins_list(_, query):
 
 @Client.on_callback_query(callback_regex(r"close_chat_\d+") & ~BANNED_USERS)
 def close_chat(_, query):
-    if user_is_chatting() or admin_is_chatting():
-        user_id = int(query.data.split("_")[2])
-        if query.from_user.id in ADMINS:
-            data = CACHE[CACHE[query.from_user.id][1]][-1]
-            if isinstance(data, list):
-                data.append((query.from_user.id, query.message.message_id))
-                for chatid, message_ids in data:
-                    delete_messages(_, True, chatid, message_ids)
-            status = CACHE[query.from_user.id][0]
-            if status == "IN_CHAT":
-                del CACHE[query.from_user.id][1]
-                send_message(_, True, query.from_user.id, USER_LEAVES_CHAT)
-                admin_id, admin_name = query.from_user.id, ADMINS[query.from_user.id]
-                if CACHE[user_id][1]:
-                    send_message(_, True, user_id,
-                                 USER_CLOSES_CHAT.format(user_id=NAME.format(admin_id), user_name=admin_name))
-                if user_id in CACHE:
-                    del CACHE[user_id]
-                logging.warning(f"{ADMINS[admin_id]} [{admin_id}] has terminated the chat with user {CACHE[admin_id][1]}")
-                del CACHE[admin_id]
-        else:
-            data = CACHE[query.from_user.id][-1]
-            if isinstance(data, list):
-                for chatid, message_ids in data:
-                    delete_messages(_, True, chatid, message_ids)
-            admin_id = CACHE[query.from_user.id][1]
+    if not user_is_chatting() and not admin_is_chatting():
+        return
+    user_id = int(query.data.split("_")[2])
+    if query.from_user.id in ADMINS:
+        data = CACHE[CACHE[query.from_user.id][1]][-1]
+        if isinstance(data, list):
+            data.append((query.from_user.id, query.message.message_id))
+            for chatid, message_ids in data:
+                delete_messages(_, True, chatid, message_ids)
+        status = CACHE[query.from_user.id][0]
+        if status == "IN_CHAT":
+            del CACHE[query.from_user.id][1]
+            send_message(_, True, query.from_user.id, USER_LEAVES_CHAT)
+            admin_id, admin_name = query.from_user.id, ADMINS[query.from_user.id]
             if CACHE[user_id][1]:
-                if query.from_user.first_name:
-                    user_name = query.from_user.first_name
-                elif query.from_user.username:
-                    user_name = query.from_user.username
-                else:
-                    user_name = "Anonymous"
-                logging.warning(f"{user_name} [{query.from_user.id}] has terminated the chat with admin {ADMINS[admin_id]} [{admin_id}]")
-                send_message(_, True, query.from_user.id,
-                             USER_LEAVES_CHAT)
-                send_message(_, True, CACHE[user_id][1],
-                             USER_CLOSES_CHAT.format(user_id=NAME.format(query.from_user.id), user_name=user_name))
-                del CACHE[query.from_user.id]
-                del CACHE[admin_id]
+                send_message(_, True, user_id,
+                             USER_CLOSES_CHAT.format(user_id=NAME.format(admin_id), user_name=admin_name))
+            if user_id in CACHE:
+                del CACHE[user_id]
+            logging.warning(f"{ADMINS[admin_id]} [{admin_id}] has terminated the chat with user {CACHE[admin_id][1]}")
+            del CACHE[admin_id]
+    else:
+        data = CACHE[query.from_user.id][-1]
+        if isinstance(data, list):
+            for chatid, message_ids in data:
+                delete_messages(_, True, chatid, message_ids)
+        admin_id = CACHE[query.from_user.id][1]
+        if CACHE[user_id][1]:
+            if query.from_user.first_name:
+                user_name = query.from_user.first_name
+            elif query.from_user.username:
+                user_name = query.from_user.username
             else:
-                back_start(_, query)
+                user_name = "Anonymous"
+            logging.warning(f"{user_name} [{query.from_user.id}] has terminated the chat with admin {ADMINS[admin_id]} [{admin_id}]")
+            send_message(_, True, query.from_user.id,
+                         USER_LEAVES_CHAT)
+            send_message(_, True, CACHE[user_id][1],
+                         USER_CLOSES_CHAT.format(user_id=NAME.format(query.from_user.id), user_name=user_name))
+            del CACHE[query.from_user.id]
+            del CACHE[admin_id]
+        else:
+            back_start(_, query)
 
 
 @Client.on_message(admin_is_chatting() & Filters.text & ~BANNED_USERS)
