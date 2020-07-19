@@ -40,10 +40,7 @@ def anti_flood(client, update):
         VAR = QUERIES
         message_id = None
         chat = user_id
-        if update.message:
-            date = update.message.date
-        else:
-            date = time.time()
+        date = update.message.date if update.message else time.time()
     if isinstance(VAR[user_id], tuple):
         chat, date = VAR[user_id]
         if time.time() - date >= BAN_TIME:
